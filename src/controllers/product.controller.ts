@@ -8,6 +8,12 @@ const insert = async (req: Request, res: Response) => {
   return res.status(status).json(data);
 };
 
+const getAll = async (_req: Request, res: Response) => {
+  const { status, data } = await productService.getAll();
+  return res.status(status).json(data);
+};
+
 export default {
   insert,
+  getAll,
 };
