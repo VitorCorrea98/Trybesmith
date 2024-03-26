@@ -18,10 +18,9 @@ describe('ProductsService', function () {
   })
 
   it("Teste o ENDPOINT GET /products, para visualizar todos os produtos", async () => {
-    const mockCreateReturn = ProductModel.bulkBuild(GetResponseCorrect);
-    sinon.stub(ProductModel, 'findAll').resolves(mockCreateReturn);
+    const mockFindAllReturn = ProductModel.bulkBuild(GetResponseCorrect);
+    sinon.stub(ProductModel, 'findAll').resolves(mockFindAllReturn);
 
-    console.log({mockCreateReturn})
     const ServiceResponse = await produtcService.getAll();
 
     expect(ServiceResponse.status).to.be.equal(200);

@@ -4,5 +4,12 @@ export type User = {
   vocation: string;
   level: number;
   password: string;
-  productIds?: number;
+  productIds?: {
+    id: number
+  }[];
+};
+
+export type UserFindAll = {
+  username: string,
+  productIds: number[] | undefined
 };
