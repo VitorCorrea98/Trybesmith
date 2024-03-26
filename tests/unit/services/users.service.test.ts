@@ -12,7 +12,6 @@ describe('UsersService', function () {
     sinon.stub(UserModel, 'findAll').resolves(mockGetAllReturn);
 
     const ServiceResponse = await userService.getAll();
-
     expect(ServiceResponse.status).to.be.equal(200);
   })
 });

@@ -1,32 +1,22 @@
+import sequelize from '../database/models/index';
 import ProductModel from '../database/models/product.model';
 import UserModel, { UserSequelizeModel } from '../database/models/user.model';
 import { ServiceResponse } from '../types/ServiceResponse';
-import { UserFindAll } from '../types/User';
 
-const extractProductIdsNumbers = (users: UserSequelizeModel[]): (number[] | undefined)[] => {
-  const numbersExtracted = users
-    .map((user) => user.dataValues.productIds?.map((product) => product.id));
-  return numbersExtracted;
-};
-
-const getAll = async (): Promise<ServiceResponse<UserFindAll[]>> => {
+const getAll = async (): Promise<ServiceResponse<UserSequelizeModel[]>> => {
   const users = await UserModel.findAll({
-    attributes: ['username'],
-    include: {
+    attributes: ['username',
+      [sequelize.fn('JSON_ARRAYAGG', sequelize.col('productIds.id')), 'productIds'],  
+    ],
+    include: [{
       model: ProductModel,
       as: 'productIds',
-      attributes: ['id'],
-    },
+      attributes: [],
+    }],
+    group: ['User.id'],
+    raw: true,
   });
-
-  const numbersExtracted = extractProductIdsNumbers(users);
-
-  const fixedAnswer = users.map((user, index) => ({
-    username: user.dataValues.username,
-    productIds: numbersExtracted[index],
-  }));
-
-  return { status: 200, data: fixedAnswer };
+  return { status: 200, data: users };
 };
 
 export default {
